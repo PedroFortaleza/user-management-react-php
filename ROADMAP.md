@@ -10,11 +10,13 @@ O merge de `develop` para `main` não é automático e só deve ser realizado qu
 
 **Objetivo:** preparar a estrutura, as convenções e uma API executável.
 
-- Criar `backend/` e `frontend/` com `.gitignore`, `.env.example` e arquivos de configuração mínimos.
-- Implementar ponto de entrada PHP, roteador e respostas JSON padronizadas.
-- Criar a estrutura `Controller`, `Service`, `Repository`, `DTO`, middleware e exceções/validador compartilhados.
-- Iniciar React + Vite + TypeScript, rotas `/login` e `/users` e base visual responsiva.
-- Documentar os comandos reais de execução no README.
+**Status:** concluída.
+
+- [x] Criar `backend/` e `frontend/` com `.gitignore`, `.env.example` e arquivos de configuração mínimos.
+- [x] Implementar ponto de entrada PHP, roteador e respostas JSON padronizadas.
+- [x] Criar a estrutura `Controller`, `Service`, `Repository`, `DTO`, middleware e exceções/validador compartilhados.
+- [x] Iniciar React + Vite + TypeScript, rotas `/login` e `/users` e base visual responsiva.
+- [x] Documentar os comandos reais de execução no README.
 
 **Validação:** API retorna JSON em rota inexistente; frontend compila e exibe a rota de login.
 
@@ -24,11 +26,13 @@ O merge de `develop` para `main` não é automático e só deve ser realizado qu
 
 **Objetivo:** entregar login seguro e sessão persistente.
 
-- Implementar repositórios JSON com bloqueio, escrita temporária e `rename` atômico.
-- Criar `seed.php`, administrador inicial e dados ignorados pelo Git.
-- Implementar `POST /api/login`, `POST /api/logout` e `GET /api/me` com token opaco, expiração e hashes de senha.
-- Implementar `AuthContext`, cliente HTTP centralizado, restauração de sessão e proteção/redirecionamento de rotas.
-- Tratar credenciais inválidas, token expirado e `401` na interface.
+**Status:** concluída.
+
+- [x] Implementar repositórios JSON com bloqueio, escrita temporária e `rename` atômico.
+- [x] Criar `seed.php`, administrador inicial e dados ignorados pelo Git.
+- [x] Implementar `POST /api/login`, `POST /api/logout` e `GET /api/me` com token opaco, expiração e hashes de senha.
+- [x] Implementar `AuthContext`, cliente HTTP centralizado, restauração de sessão e proteção/redirecionamento de rotas.
+- [x] Tratar credenciais inválidas, token expirado e `401` na interface.
 
 **Validação:** login com admin funciona; F5 mantém a sessão; logout e token inválido levam ao login; senha/hash não aparecem nas respostas.
 

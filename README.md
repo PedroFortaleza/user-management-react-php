@@ -2,7 +2,7 @@
 
 Aplicação full stack local para autenticação e gerenciamento de usuários. O projeto combina uma API REST em PHP puro com uma SPA React, usando arquivos JSON como persistência — conforme o desafio técnico.
 
-> Status: Fase 1 concluída. A API inicial e as rotas base do frontend estão executáveis; autenticação, persistência de usuários e CRUD serão entregues nas próximas fases descritas em [ROADMAP.md](ROADMAP.md).
+> Status: Fases 1 e 2 concluídas. Login, sessão persistente e rotas protegidas já estão funcionais; o CRUD de usuários será entregue na próxima fase descrita em [ROADMAP.md](ROADMAP.md).
 
 ## Objetivo
 
@@ -32,12 +32,16 @@ Permitir que um usuário autenticado consulte, cadastre, edite e exclua usuário
 │   │   ├── Service/              # regras de negócio e autorização
 │   │   ├── Middleware/           # autenticação e tratamento comum
 │   │   └── Support/              # respostas, validação e exceções
-│   ├── data/                     # reservado para os JSONs nas próximas fases
+│   ├── data/                     # users.json e sessions.json locais (não versionados)
+│   ├── seed.php                  # cria o administrador inicial
 │   └── .env.example
 ├── frontend/
 │   └── src/
 │       ├── components/           # componentes reutilizáveis
+│       ├── contexts/             # sessão centralizada
 │       ├── features/             # login e usuários por domínio
+│       ├── routes/               # guardas de rota
+│       ├── services/             # cliente HTTP centralizado
 │       └── styles/               # estilos globais responsivos
 ├── CLAUDE.md                     # instruções de desenvolvimento assistido
 ├── ROADMAP.md                    # fases e commits sugeridos
@@ -53,7 +57,7 @@ Permitir que um usuário autenticado consulte, cadastre, edite e exclua usuário
 
 ## Como executar
 
-Os comandos abaixo funcionam na Fase 1.
+Os comandos abaixo funcionam até a Fase 2.
 
 1. Prepare as variáveis do backend (opcional, mas recomendado para configurar a origem permitida pelo CORS):
 
@@ -64,10 +68,11 @@ Os comandos abaixo funcionam na Fase 1.
 
    No Windows PowerShell, substitua cada `cp .env.example .env` por `Copy-Item .env.example .env`.
 
-2. Inicie a API em um terminal:
+2. Crie o usuário administrador inicial e inicie a API em um terminal:
 
    ```bash
    cd backend
+   php seed.php
    php -S localhost:8000 -t public
    ```
 
@@ -84,9 +89,9 @@ Os comandos abaixo funcionam na Fase 1.
 
 4. Acesse a URL informada pelo Vite (normalmente `http://localhost:5173`).
 
-### Credenciais iniciais (Fase 2)
+### Credenciais iniciais
 
-A Fase 1 ainda não possui seed ou login funcional. Quando o seed for implementado na Fase 2, as credenciais locais serão:
+Após executar o seed, use:
 
 | Campo | Valor |
 | --- | --- |
@@ -97,7 +102,7 @@ Essas credenciais existem apenas para desenvolvimento local. A senha é persisti
 
 ## Contrato-alvo da API
 
-Todas as respostas são JSON. A rota já disponível nesta fase é `GET /api/health`; as rotas abaixo serão implementadas nas Fases 2 e 3. Rotas protegidas exigirão `Authorization: Bearer <token>`.
+Todas as respostas são JSON. Já estão disponíveis `GET /api/health`, `POST /api/login`, `POST /api/logout` e `GET /api/me`. As rotas de usuários serão implementadas na Fase 3. Rotas protegidas exigem `Authorization: Bearer <token>`.
 
 | Método | Rota | Descrição |
 | --- | --- | --- |
@@ -115,8 +120,8 @@ Os retornos de erro serão consistentes: `400` para JSON/requisição inválida,
 ## Decisões técnicas
 
 - **Arquitetura em camadas:** controllers recebem a requisição, DTOs normalizam entradas, services aplicam regras e repositories isolam a persistência. Isso mantém o código direto de seguir e de testar.
-- **Persistência segura:** o repositório escreverá em arquivo temporário protegido com `flock` e fará `rename` atômico ao finalizar. Assim, um leitor não recebe um JSON parcialmente escrito e escritas simultâneas são serializadas.
-- **Sessão com token opaco:** tokens aleatórios, com expiração, serão guardados em `sessions.json`; o navegador mantém apenas o token e os dados seguros do usuário. Logout remove o token do armazenamento local e invalida a sessão no servidor.
+- **Persistência segura:** o repositório escreve em arquivo temporário, mantém um `flock` durante a operação e finaliza com `rename` atômico. Assim, um leitor não recebe um JSON parcialmente escrito e escritas simultâneas são serializadas.
+- **Sessão com token opaco:** tokens aleatórios, com expiração configurável, têm somente o hash guardado em `sessions.json`; o navegador mantém o token e os dados seguros do usuário. Logout remove o token do armazenamento local e invalida a sessão no servidor.
 - **Autorização por perfil:** `admin` gerencia usuários; `user` pode consultar a lista e o próprio perfil, sem alterar cadastros. A regra é aplicada no servidor, não apenas na interface.
 - **Validação duplicada com propósito:** o frontend dá retorno imediato; o backend é a fonte de verdade para formato do e-mail, unicidade, senha mínima de 8 caracteres, perfil permitido e campos obrigatórios.
 - **Experiência e acessibilidade:** haverá estados visuais de carregamento, erro e vazio; mensagens de sucesso/falha; confirmação de exclusão; labels associados, foco visível e fluxo por teclado.
@@ -148,7 +153,7 @@ Testes automatizados de frontend e backend serão adicionados na Fase 4.
 - A persistência em JSON é apropriada ao desafio e ao uso local, mas não substitui um banco de dados em produção.
 - Tokens e arquivos de dados não são um provedor de identidade nem um cofre de segredos; são uma implementação local didática.
 - A política de permissão detalhada será documentada e testada junto da implementação para evitar divergência entre API e interface.
-- A Fase 1 expõe somente a rota de saúde da API e as telas-base do frontend; login, sessão e CRUD ainda não estão disponíveis.
+- O CRUD de usuários e as permissões por perfil serão implementados na Fase 3 e na Fase 4, respectivamente.
 
 ## Histórico de implementação
 
