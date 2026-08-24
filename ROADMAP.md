@@ -1,6 +1,10 @@
 # Roadmap de implementação
 
-Cada fase termina em um commit na `main`. Não misture fases: isso produz um histórico curto, claro e fácil de defender na entrevista.
+O desenvolvimento acontece na branch `develop`; a `main` permanece estável. Cada fase pode ter vários commits pequenos e coerentes, conforme a implementação evoluir. Não misture funcionalidades de fases diferentes no mesmo commit.
+
+Todos os commits seguem Conventional Commits (por exemplo, `feat:`, `fix:`, `test:`, `docs:` e `chore:`). Antes de cada commit, execute as validações aplicáveis à alteração e revise o diff.
+
+O merge de `develop` para `main` não é automático e só deve ser realizado quando solicitado pelo responsável pelo projeto.
 
 ## Fase 1 — Fundação e contrato
 
@@ -14,7 +18,7 @@ Cada fase termina em um commit na `main`. Não misture fases: isso produz um his
 
 **Validação:** API retorna JSON em rota inexistente; frontend compila e exibe a rota de login.
 
-**Commit:** `chore: estrutura inicial da aplicação`
+**Exemplos de commits possíveis:** `chore: estruturar backend e frontend`; `feat: adicionar roteamento inicial da API`; `feat: iniciar rotas do frontend`
 
 ## Fase 2 — Persistência, seed e autenticação
 
@@ -28,7 +32,7 @@ Cada fase termina em um commit na `main`. Não misture fases: isso produz um his
 
 **Validação:** login com admin funciona; F5 mantém a sessão; logout e token inválido levam ao login; senha/hash não aparecem nas respostas.
 
-**Commit:** `feat: autenticação e sessão persistente`
+**Exemplos de commits possíveis:** `feat: adicionar persistência JSON segura`; `feat: implementar autenticação por token`; `feat: proteger rotas do frontend`
 
 ## Fase 3 — CRUD completo e regras de negócio
 
@@ -42,7 +46,7 @@ Cada fase termina em um commit na `main`. Não misture fases: isso produz um his
 
 **Validação:** executar manualmente o fluxo criar → logout → login com novo usuário → editar → excluir; testar e-mail duplicado e autoexclusão.
 
-**Commit:** `feat: CRUD de usuários com validações`
+**Exemplos de commits possíveis:** `feat: criar endpoints de usuários`; `feat: adicionar formulário de usuários`; `fix: validar duplicidade de e-mail`
 
 ## Fase 4 — Diferenciais e qualidade
 
@@ -56,7 +60,7 @@ Cada fase termina em um commit na `main`. Não misture fases: isso produz um his
 
 **Validação:** testes, lint e build passam; `user` não consegue chamar ações administrativas diretamente na API; interface é navegável por teclado.
 
-**Commit:** `feat: diferenciais de qualidade e permissões`
+**Exemplos de commits possíveis:** `feat: aplicar permissões por perfil`; `test: cobrir regras de usuários`; `feat: adicionar filtros na listagem`
 
 ## Fase 5 — Revisão de entrega
 
@@ -69,4 +73,4 @@ Cada fase termina em um commit na `main`. Não misture fases: isso produz um his
 
 **Validação:** demonstrar login, F5, CRUD, validações, permissões e logout sem erro no console.
 
-**Commit:** `docs: finalizar documentação e revisão de entrega`
+**Exemplos de commits possíveis:** `docs: atualizar instruções de execução`; `test: validar fluxo completo de entrega`; `chore: revisar arquivos da entrega`
