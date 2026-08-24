@@ -1,0 +1,16 @@
+# Ambiente e dados locais
+.env
+backend/.env
+backend/data/*.json
+!backend/data/.gitkeep
+
+# Dependências e artefatos
+frontend/node_modules/
+frontend/dist/
+backend/vendor/
+
+# Ferramentas e sistema operacional
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
