@@ -104,6 +104,12 @@ h2 {
   line-height: 1.6;
 }
 
+.status-note--error {
+  border-left-color: #dc2626;
+  color: #991b1b;
+  background: #fef2f2;
+}
+
 .form-stack {
   display: grid;
   gap: 1.25rem;
@@ -161,10 +167,25 @@ input:disabled {
   background: #f8fbff;
 }
 
-.secondary-link {
+.secondary-button {
   display: inline-flex;
   margin-top: 0.5rem;
+  min-height: auto;
+  padding: 0;
+  border: 0;
   color: #1d4ed8;
+  background: transparent;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.route-status {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  color: #1e3a8a;
+  background: #eff6ff;
   font-weight: 700;
 }
 
