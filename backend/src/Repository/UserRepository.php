@@ -38,6 +38,42 @@ final class UserRepository extends AbstractRepository
         return null;
     }
 
+    /** @return list<array<string, mixed>> */
+    public function all(): array
+    {
+        return $this->storage->read();
+    }
+
+    /** @param array<string, mixed> $user */
+    public function create(array $user): void
+    {
+        $this->storage->mutate(function (array $users) use ($user): array {
+            $highestId = array_reduce($users, static fn (int $highest, array $record): int => max($highest, (int) ($record['id'] ?? 0)), 0);
+            $user['id'] = $highestId + 1;
+            $users[] = $user;
+            return $users;
+        });
+    }
+
+    /** @param array<string, mixed> $user */
+    public function update(int $id, array $user): void
+    {
+        $this->storage->mutate(function (array $users) use ($id, $user): array {
+            foreach ($users as $index => $record) {
+                if ((int) ($record['id'] ?? 0) === $id) {
+                    $users[$index] = $user;
+                    break;
+                }
+            }
+            return $users;
+        });
+    }
+
+    public function delete(int $id): void
+    {
+        $this->storage->mutate(static fn (array $users): array => array_values(array_filter($users, static fn (array $user): bool => (int) ($user['id'] ?? 0) !== $id)));
+    }
+
     public function createInitialAdmin(string $passwordHash): void
     {
         $this->storage->mutate(function (array $users) use ($passwordHash): array {
