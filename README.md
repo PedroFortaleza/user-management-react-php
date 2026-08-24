@@ -2,7 +2,7 @@
 
 Aplicação full stack local para autenticação e gerenciamento de usuários. O projeto combina uma API REST em PHP puro com uma SPA React, usando arquivos JSON como persistência — conforme o desafio técnico.
 
-> Status: documentação e planejamento inicial. Os comandos e a estrutura abaixo serão entregues ao longo das fases descritas em [ROADMAP.md](ROADMAP.md).
+> Status: Fase 1 concluída. A API inicial e as rotas base do frontend estão executáveis; autenticação, persistência de usuários e CRUD serão entregues nas próximas fases descritas em [ROADMAP.md](ROADMAP.md).
 
 ## Objetivo
 
@@ -19,7 +19,7 @@ Permitir que um usuário autenticado consulte, cadastre, edite e exclua usuário
 | Rotas | React Router | Separa as rotas públicas e protegidas. |
 | Testes | PHPUnit e Vitest/Testing Library | Cobrem regras críticas no backend e interface. |
 
-## Estrutura prevista
+## Estrutura atual
 
 ```text
 .
@@ -32,16 +32,13 @@ Permitir que um usuário autenticado consulte, cadastre, edite e exclua usuário
 │   │   ├── Service/              # regras de negócio e autorização
 │   │   ├── Middleware/           # autenticação e tratamento comum
 │   │   └── Support/              # respostas, validação e exceções
-│   ├── data/                     # users.json e sessions.json (não versionados)
-│   ├── seed.php                  # cria o administrador inicial
+│   ├── data/                     # reservado para os JSONs nas próximas fases
 │   └── .env.example
 ├── frontend/
 │   └── src/
 │       ├── components/           # componentes reutilizáveis
 │       ├── features/             # login e usuários por domínio
-│       ├── routes/               # guardas de rota
-│       ├── services/             # cliente da API
-│       └── contexts/             # sessão centralizada
+│       └── styles/               # estilos globais responsivos
 ├── CLAUDE.md                     # instruções de desenvolvimento assistido
 ├── ROADMAP.md                    # fases e commits sugeridos
 └── README.md
@@ -56,37 +53,40 @@ Permitir que um usuário autenticado consulte, cadastre, edite e exclua usuário
 
 ## Como executar
 
-Os comandos serão utilizáveis quando as fases de implementação estiverem concluídas.
+Os comandos abaixo funcionam na Fase 1.
 
-1. Prepare as variáveis do backend:
+1. Prepare as variáveis do backend (opcional, mas recomendado para configurar a origem permitida pelo CORS):
 
    ```bash
    cd backend
    cp .env.example .env
    ```
 
-   No Windows PowerShell, use `Copy-Item .env.example .env`.
+   No Windows PowerShell, substitua cada `cp .env.example .env` por `Copy-Item .env.example .env`.
 
-2. Crie o usuário inicial e inicie a API:
+2. Inicie a API em um terminal:
 
    ```bash
-   php seed.php
+   cd backend
    php -S localhost:8000 -t public
    ```
 
-3. Em outro terminal, inicie o frontend:
+   Verifique a API em `http://localhost:8000/api/health`. A resposta esperada é `{"status":"ok"}`.
+
+3. Em outro terminal, prepare e inicie o frontend:
 
    ```bash
    cd frontend
+   cp .env.example .env
    npm install
    npm run dev
    ```
 
 4. Acesse a URL informada pelo Vite (normalmente `http://localhost:5173`).
 
-### Credenciais iniciais
+### Credenciais iniciais (Fase 2)
 
-Após executar o seed, use:
+A Fase 1 ainda não possui seed ou login funcional. Quando o seed for implementado na Fase 2, as credenciais locais serão:
 
 | Campo | Valor |
 | --- | --- |
@@ -95,9 +95,9 @@ Após executar o seed, use:
 
 Essas credenciais existem apenas para desenvolvimento local. A senha é persistida exclusivamente como hash gerado por `password_hash`.
 
-## Contrato resumido da API
+## Contrato-alvo da API
 
-Todas as respostas são JSON. Rotas protegidas exigem `Authorization: Bearer <token>`.
+Todas as respostas são JSON. A rota já disponível nesta fase é `GET /api/health`; as rotas abaixo serão implementadas nas Fases 2 e 3. Rotas protegidas exigirão `Authorization: Bearer <token>`.
 
 | Método | Rota | Descrição |
 | --- | --- | --- |
@@ -121,7 +121,7 @@ Os retornos de erro serão consistentes: `400` para JSON/requisição inválida,
 - **Validação duplicada com propósito:** o frontend dá retorno imediato; o backend é a fonte de verdade para formato do e-mail, unicidade, senha mínima de 8 caracteres, perfil permitido e campos obrigatórios.
 - **Experiência e acessibilidade:** haverá estados visuais de carregamento, erro e vazio; mensagens de sucesso/falha; confirmação de exclusão; labels associados, foco visível e fluxo por teclado.
 
-## Diferenciais incluídos
+## Diferenciais planejados
 
 - Frontend em TypeScript;
 - testes automatizados para fluxos e regras importantes;
@@ -131,25 +131,24 @@ Os retornos de erro serão consistentes: `400` para JSON/requisição inválida,
 - acessibilidade básica verificável;
 - Docker Compose opcional para iniciar o ambiente.
 
-## Scripts de qualidade
+## Scripts de qualidade disponíveis
 
-Ao final da implementação, os comandos abaixo serão os critérios mínimos antes de um commit:
+Execute estes comandos antes de commitar alterações no frontend:
 
 ```bash
 # frontend
 npm run lint
-npm run test
 npm run build
-
-# backend
-composer test
 ```
+
+Testes automatizados de frontend e backend serão adicionados na Fase 4.
 
 ## Limitações conhecidas
 
 - A persistência em JSON é apropriada ao desafio e ao uso local, mas não substitui um banco de dados em produção.
 - Tokens e arquivos de dados não são um provedor de identidade nem um cofre de segredos; são uma implementação local didática.
 - A política de permissão detalhada será documentada e testada junto da implementação para evitar divergência entre API e interface.
+- A Fase 1 expõe somente a rota de saúde da API e as telas-base do frontend; login, sessão e CRUD ainda não estão disponíveis.
 
 ## Histórico de implementação
 
