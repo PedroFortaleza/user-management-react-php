@@ -42,11 +42,13 @@ O merge de `develop` para `main` não é automático e só deve ser realizado qu
 
 **Objetivo:** tornar a gestão de usuários funcional de ponta a ponta.
 
-- Implementar `GET /api/users`, `GET /api/users/{id}`, `POST`, `PUT` e `DELETE /api/users/{id}`.
-- Aplicar DTOs e validação de nome, e-mail, senha, perfil e unicidade na API; retornar `400`, `404` e `422` de modo consistente.
-- Construir listagem, formulário de criação/edição e confirmação de exclusão.
-- Validar no frontend antes do envio e apresentar feedback de sucesso/falha, carregamento, lista vazia e erros por campo.
-- Impedir exclusão da própria conta e confirmar que um usuário recém-criado entra imediatamente.
+**Status:** concluída.
+
+- [x] Implementar `GET /api/users`, `GET /api/users/{id}`, `POST`, `PUT` e `DELETE /api/users/{id}`.
+- [x] Aplicar DTOs e validação de nome, e-mail, senha, perfil e unicidade na API; retornar `400`, `404` e `422` de modo consistente.
+- [x] Construir listagem, formulário de criação/edição e confirmação de exclusão.
+- [x] Validar no frontend antes do envio e apresentar feedback de sucesso/falha, carregamento, lista vazia e erros por campo.
+- [x] Impedir exclusão da própria conta e confirmar que um usuário recém-criado entra imediatamente.
 
 **Validação:** executar manualmente o fluxo criar → logout → login com novo usuário → editar → excluir; testar e-mail duplicado e autoexclusão.
 

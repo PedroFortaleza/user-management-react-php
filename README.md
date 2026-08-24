@@ -2,7 +2,7 @@
 
 Aplicação full stack local para autenticação e gerenciamento de usuários. O projeto combina uma API REST em PHP puro com uma SPA React, usando arquivos JSON como persistência — conforme o desafio técnico.
 
-> Status: Fases 1 e 2 concluídas. Login, sessão persistente e rotas protegidas já estão funcionais; o CRUD de usuários será entregue na próxima fase descrita em [ROADMAP.md](ROADMAP.md).
+> Status: Fases 1, 2 e 3 concluídas. A aplicação possui autenticação persistente e CRUD completo de usuários; os diferenciais serão desenvolvidos nas próximas fases descritas em [ROADMAP.md](ROADMAP.md).
 
 ## Objetivo
 
@@ -57,7 +57,7 @@ Permitir que um usuário autenticado consulte, cadastre, edite e exclua usuário
 
 ## Como executar
 
-Os comandos abaixo funcionam até a Fase 2.
+Os comandos abaixo funcionam até a Fase 3.
 
 1. Prepare as variáveis do backend (opcional, mas recomendado para configurar a origem permitida pelo CORS):
 
@@ -102,7 +102,7 @@ Essas credenciais existem apenas para desenvolvimento local. A senha é persisti
 
 ## Contrato-alvo da API
 
-Todas as respostas são JSON. Já estão disponíveis `GET /api/health`, `POST /api/login`, `POST /api/logout` e `GET /api/me`. As rotas de usuários serão implementadas na Fase 3. Rotas protegidas exigem `Authorization: Bearer <token>`.
+Todas as respostas são JSON. As rotas documentadas abaixo estão disponíveis. Rotas protegidas exigem `Authorization: Bearer <token>`.
 
 | Método | Rota | Descrição |
 | --- | --- | --- |
@@ -153,7 +153,7 @@ Testes automatizados de frontend e backend serão adicionados na Fase 4.
 - A persistência em JSON é apropriada ao desafio e ao uso local, mas não substitui um banco de dados em produção.
 - Tokens e arquivos de dados não são um provedor de identidade nem um cofre de segredos; são uma implementação local didática.
 - A política de permissão detalhada será documentada e testada junto da implementação para evitar divergência entre API e interface.
-- O CRUD de usuários e as permissões por perfil serão implementados na Fase 3 e na Fase 4, respectivamente.
+- As permissões por perfil serão refinadas na Fase 4. Nesta fase, qualquer usuário autenticado pode gerenciar cadastros.
 
 ## Histórico de implementação
 
