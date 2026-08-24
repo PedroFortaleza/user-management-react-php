@@ -2,6 +2,8 @@
 .env
 backend/.env
 backend/data/*.json
+backend/data/*.lock
+backend/data/*.tmp
 !backend/data/.gitkeep
 
 # Dependências e artefatos
