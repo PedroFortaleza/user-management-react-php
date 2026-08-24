@@ -18,6 +18,8 @@ export function UsersPage() {
   const [saving, setSaving] = useState(false)
   const [message, setMessage] = useState('')
   const [errors, setErrors] = useState<Record<string, string[]>>({})
+  const [query, setQuery] = useState('')
+  const isAdmin = session?.user.role === 'admin'
 
   const loadUsers = useCallback(async () => {
     setLoading(true)
@@ -42,6 +44,7 @@ export function UsersPage() {
     try { await userService.remove(user.id); setMessage('Usuário removido com sucesso.'); await loadUsers() } catch (error) { setMessage(error instanceof ApiError ? error.message : 'Não foi possível remover o usuário.') }
   }
   const fieldError = (field: string) => errors[field]?.[0]
+  const filteredUsers = users.filter((user) => `${user.name} ${user.email} ${user.role}`.toLowerCase().includes(query.toLowerCase()))
 
   return (
     <AppShell
@@ -49,8 +52,9 @@ export function UsersPage() {
       title="Gestão centralizada"
       description={`Sessão ativa para ${session?.user.name}. Gerencie os usuários cadastrados abaixo.`}
     >
-      <div className="toolbar"><button type="button" onClick={startCreate}>Novo usuário</button><button className="secondary-button" type="button" onClick={() => void logout()}>Sair da conta</button></div>
-      {(editing || form.name || message === '') && <form className="form-stack user-form" onSubmit={submit} noValidate>
+      <div className="toolbar">{isAdmin && <button type="button" onClick={startCreate}>Novo usuário</button>}<button className="secondary-button" type="button" onClick={() => void logout()}>Sair da conta</button></div>
+      <label className="filter-field" htmlFor="user-filter">Buscar usuários<input id="user-filter" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Nome, e-mail ou perfil" /></label>
+      {isAdmin && (editing || form.name || message === '') && <form className="form-stack user-form" onSubmit={submit} noValidate>
         <h2>{editing ? 'Editar usuário' : 'Cadastrar usuário'}</h2>
         <label>Nome<input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />{fieldError('name') && <small>{fieldError('name')}</small>}</label>
         <label>E-mail<input type="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />{fieldError('email') && <small>{fieldError('email')}</small>}</label>
@@ -59,7 +63,7 @@ export function UsersPage() {
         <button disabled={saving}>{saving ? 'Salvando…' : editing ? 'Salvar alterações' : 'Cadastrar usuário'}</button>
       </form>}
       {message && <p className="status-note" role="status">{message}</p>}
-      {loading ? <p role="status">Carregando usuários…</p> : users.length === 0 ? <div className="empty-state"><p>Nenhum usuário cadastrado.</p></div> : <div className="user-list">{users.map((user) => <article className="user-row" key={user.id}><div><strong>{user.name}</strong><span>{user.email} · {user.role}</span></div><div><button className="secondary-button" type="button" onClick={() => startEdit(user)}>Editar</button><button className="danger-button" type="button" disabled={user.id === session?.user.id} title={user.id === session?.user.id ? 'Você não pode excluir a própria conta.' : undefined} onClick={() => void remove(user)}>Excluir</button></div></article>)}</div>}
+      {loading ? <p role="status">Carregando usuários…</p> : filteredUsers.length === 0 ? <div className="empty-state"><p>Nenhum usuário encontrado.</p></div> : <div className="user-list">{filteredUsers.map((user) => <article className="user-row" key={user.id}><div><strong>{user.name}</strong><span>{user.email} · {user.role}</span></div>{isAdmin && <div><button className="secondary-button" type="button" onClick={() => startEdit(user)}>Editar</button><button className="danger-button" type="button" disabled={user.id === session?.user.id} title={user.id === session?.user.id ? 'Você não pode excluir a própria conta.' : undefined} onClick={() => void remove(user)}>Excluir</button></div>}</article>)}</div>}
     </AppShell>
   )
 }

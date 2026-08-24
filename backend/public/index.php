@@ -40,11 +40,11 @@ try {
     $router->post('/api/logout', static fn (Request $request) => $authController->logout($authMiddleware->authenticate($request)));
     $router->get('/api/me', static fn (Request $request) => $authController->me($authMiddleware->authenticate($request)));
 
-    $router->get('/api/users', static function (Request $request) use ($authMiddleware, $userController) { $authMiddleware->authenticate($request); return $userController->index(); });
-    $router->get('/api/users/{id}', static function (Request $request, array $params) use ($authMiddleware, $userController) { $authMiddleware->authenticate($request); return $userController->show($userController->idFrom($params)); });
-    $router->post('/api/users', static function (Request $request) use ($authMiddleware, $userController) { $authMiddleware->authenticate($request); return $userController->store($request); });
-    $router->put('/api/users/{id}', static function (Request $request, array $params) use ($authMiddleware, $userController) { $authMiddleware->authenticate($request); return $userController->update($request, $userController->idFrom($params)); });
-    $router->delete('/api/users/{id}', static fn (Request $request, array $params) => $userController->destroy($userController->idFrom($params), (int) $authMiddleware->authenticate($request)['user']['id']));
+    $router->get('/api/users', static function (Request $request) use ($authMiddleware, $userController) { return $userController->index($authMiddleware->authenticate($request)['user']); });
+    $router->get('/api/users/{id}', static function (Request $request, array $params) use ($authMiddleware, $userController) { return $userController->show($userController->idFrom($params), $authMiddleware->authenticate($request)['user']); });
+    $router->post('/api/users', static function (Request $request) use ($authMiddleware, $userController) { return $userController->store($request, $authMiddleware->authenticate($request)['user']); });
+    $router->put('/api/users/{id}', static function (Request $request, array $params) use ($authMiddleware, $userController) { return $userController->update($request, $userController->idFrom($params), $authMiddleware->authenticate($request)['user']); });
+    $router->delete('/api/users/{id}', static fn (Request $request, array $params) => $userController->destroy($userController->idFrom($params), $authMiddleware->authenticate($request)['user']));
 
     $router->dispatch($request)->send();
 } catch (ValidationException $exception) {

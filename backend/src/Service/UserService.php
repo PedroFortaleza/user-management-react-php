@@ -15,14 +15,23 @@ final class UserService
     public function __construct(private readonly UserRepository $users) {}
 
     /** @return list<array<string, mixed>> */
-    public function list(): array { return array_map($this->safeUser(...), $this->users->all()); }
-
-    /** @return array<string, mixed> */
-    public function find(int $id): array { return $this->safeUser($this->requireUser($id)); }
-
-    /** @return array<string, mixed> */
-    public function create(CreateUserDTO $input): array
+    public function list(array $actor): array
     {
+        if ($actor['role'] === 'admin') { return array_map($this->safeUser(...), $this->users->all()); }
+        return [$this->find((int) $actor['id'], $actor)];
+    }
+
+    /** @return array<string, mixed> */
+    public function find(int $id, array $actor): array
+    {
+        $this->requireAdminOrSelf($actor, $id);
+        return $this->safeUser($this->requireUser($id));
+    }
+
+    /** @return array<string, mixed> */
+    public function create(CreateUserDTO $input, array $actor): array
+    {
+        $this->requireAdmin($actor);
         $this->ensureEmailAvailable($input->email());
         $now = (new \DateTimeImmutable('now'))->format(DATE_ATOM);
         $this->users->create(['name' => $input->name(), 'email' => $input->email(), 'password_hash' => password_hash($input->password(), PASSWORD_DEFAULT), 'role' => $input->role(), 'created_at' => $now, 'updated_at' => $now]);
@@ -30,8 +39,9 @@ final class UserService
     }
 
     /** @return array<string, mixed> */
-    public function update(int $id, UpdateUserDTO $input): array
+    public function update(int $id, UpdateUserDTO $input, array $actor): array
     {
+        $this->requireAdmin($actor);
         $user = $this->requireUser($id);
         $this->ensureEmailAvailable($input->email(), $id);
         $user['name'] = $input->name();
@@ -43,10 +53,11 @@ final class UserService
         return $this->safeUser($user);
     }
 
-    public function delete(int $id, int $authenticatedId): void
+    public function delete(int $id, array $actor): void
     {
+        $this->requireAdmin($actor);
         $this->requireUser($id);
-        if ($id === $authenticatedId) { throw new ValidationException(['user' => ['Você não pode excluir a própria conta.']]); }
+        if ($id === (int) $actor['id']) { throw new ValidationException(['user' => ['Você não pode excluir a própria conta.']]); }
         $this->users->delete($id);
     }
 
@@ -55,6 +66,11 @@ final class UserService
         $existing = $this->users->findByEmail($email);
         if ($existing !== null && (int) $existing['id'] !== $exceptId) { throw new ValidationException(['email' => ['Este e-mail já está em uso.']]); }
     }
+
+    /** @param array<string, mixed> $actor */
+    private function requireAdmin(array $actor): void { if (($actor['role'] ?? null) !== 'admin') { throw new HttpException(403, 'Você não tem permissão para esta ação.'); } }
+    /** @param array<string, mixed> $actor */
+    private function requireAdminOrSelf(array $actor, int $id): void { if (($actor['role'] ?? null) !== 'admin' && (int) ($actor['id'] ?? 0) !== $id) { throw new HttpException(403, 'Você não tem permissão para consultar este usuário.'); } }
 
     /** @return array<string, mixed> */
     private function requireUser(int $id): array { return $this->users->findById($id) ?? throw new HttpException(404, 'Usuário não encontrado.'); }

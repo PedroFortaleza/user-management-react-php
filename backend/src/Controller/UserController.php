@@ -14,11 +14,11 @@ use App\Support\Request;
 final class UserController
 {
     public function __construct(private readonly UserService $users) {}
-    public function index(): JsonResponse { return JsonResponse::success(['users' => $this->users->list()]); }
-    public function show(int $id): JsonResponse { return JsonResponse::success(['user' => $this->users->find($id)]); }
-    public function store(Request $request): JsonResponse { return JsonResponse::success($this->users->create(CreateUserDTO::fromArray($request->json())), 201); }
-    public function update(Request $request, int $id): JsonResponse { return JsonResponse::success($this->users->update($id, UpdateUserDTO::fromArray($request->json()))); }
-    public function destroy(int $id, int $authenticatedId): JsonResponse { $this->users->delete($id, $authenticatedId); return JsonResponse::success(['message' => 'Usuário removido com sucesso.']); }
+    public function index(array $actor): JsonResponse { return JsonResponse::success(['users' => $this->users->list($actor)]); }
+    public function show(int $id, array $actor): JsonResponse { return JsonResponse::success(['user' => $this->users->find($id, $actor)]); }
+    public function store(Request $request, array $actor): JsonResponse { return JsonResponse::success($this->users->create(CreateUserDTO::fromArray($request->json()), $actor), 201); }
+    public function update(Request $request, int $id, array $actor): JsonResponse { return JsonResponse::success($this->users->update($id, UpdateUserDTO::fromArray($request->json()), $actor)); }
+    public function destroy(int $id, array $actor): JsonResponse { $this->users->delete($id, $actor); return JsonResponse::success(['message' => 'Usuário removido com sucesso.']); }
     /** @param array<string, string> $parameters */
     public function idFrom(array $parameters): int
     {
