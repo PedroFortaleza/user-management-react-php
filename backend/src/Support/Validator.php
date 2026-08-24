@@ -24,4 +24,11 @@ final class Validator
             throw new ValidationException($errors);
         }
     }
+
+    public static function email(string $value): void
+    {
+        if (filter_var($value, FILTER_VALIDATE_EMAIL) === false) {
+            throw new ValidationException(['email' => ['Informe um e-mail válido.']]);
+        }
+    }
 }

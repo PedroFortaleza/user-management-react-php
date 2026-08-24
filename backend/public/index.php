@@ -3,7 +3,12 @@
 declare(strict_types=1);
 
 use App\Controller\HealthController;
+use App\Controller\AuthController;
+use App\Middleware\AuthMiddleware;
 use App\Middleware\CorsMiddleware;
+use App\Repository\SessionRepository;
+use App\Repository\UserRepository;
+use App\Service\AuthenticationService;
 use App\Service\HealthService;
 use App\Support\HttpException;
 use App\Support\JsonResponse;
@@ -22,8 +27,17 @@ try {
 
     $router = new Router();
     $healthController = new HealthController(new HealthService());
+    $authentication = new AuthenticationService(
+        new UserRepository(dirname(__DIR__) . '/data'),
+        new SessionRepository(dirname(__DIR__) . '/data'),
+    );
+    $authController = new AuthController($authentication);
+    $authMiddleware = new AuthMiddleware($authentication);
 
-    $router->get('/api/health', $healthController->show(...));
+    $router->get('/api/health', static fn () => $healthController->show());
+    $router->post('/api/login', $authController->login(...));
+    $router->post('/api/logout', static fn (Request $request) => $authController->logout($authMiddleware->authenticate($request)));
+    $router->get('/api/me', static fn (Request $request) => $authController->me($authMiddleware->authenticate($request)));
 
     $router->dispatch($request)->send();
 } catch (ValidationException $exception) {

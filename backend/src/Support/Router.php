@@ -6,15 +6,23 @@ namespace App\Support;
 
 final class Router
 {
-    /** @var array<string, callable(): JsonResponse> */
+    /** @var array<string, callable(Request): JsonResponse> */
     private array $routes = [];
 
     /**
-     * @param callable(): JsonResponse $handler
+     * @param callable(Request): JsonResponse $handler
      */
     public function get(string $path, callable $handler): void
     {
         $this->routes['GET ' . $path] = $handler;
+    }
+
+    /**
+     * @param callable(Request): JsonResponse $handler
+     */
+    public function post(string $path, callable $handler): void
+    {
+        $this->routes['POST ' . $path] = $handler;
     }
 
     public function dispatch(Request $request): JsonResponse
@@ -25,6 +33,6 @@ final class Router
             return JsonResponse::error('Rota não encontrada.', 404);
         }
 
-        return $handler();
+        return $handler($request);
     }
 }
