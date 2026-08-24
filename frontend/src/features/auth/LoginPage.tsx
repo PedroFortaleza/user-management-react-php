@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
@@ -15,6 +15,15 @@ export function LoginPage() {
   const [message, setMessage] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const redirectTo = (location.state as { from?: { pathname?: string } } | null)?.from?.pathname ?? '/users'
+
+  useEffect(() => {
+    const notice = sessionStorage.getItem('user-management.expired-session-notice')
+
+    if (notice) {
+      setMessage(notice)
+      sessionStorage.removeItem('user-management.expired-session-notice')
+    }
+  }, [])
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()

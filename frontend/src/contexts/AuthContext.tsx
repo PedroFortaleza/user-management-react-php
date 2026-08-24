@@ -17,6 +17,7 @@ type AuthContextValue = {
 }
 
 const storageKey = 'user-management.auth-session'
+const expiredSessionNoticeKey = 'user-management.expired-session-notice'
 const AuthContext = createContext<AuthContextValue | null>(null)
 
 function readStoredSession(): AuthSession | null {
@@ -47,8 +48,13 @@ export function AuthProvider({ children }: PropsWithChildren) {
     setStatus('authenticated')
   }, [])
 
+  const handleUnauthorized = useCallback(() => {
+    sessionStorage.setItem(expiredSessionNoticeKey, 'Sua sessão expirou ou não é mais válida. Entre novamente.')
+    clearSession()
+  }, [clearSession])
+
   useEffect(() => {
-    apiClient.setUnauthorizedHandler(clearSession)
+    apiClient.setUnauthorizedHandler(handleUnauthorized)
     const storedSession = readStoredSession()
 
     if (!storedSession) {
@@ -65,7 +71,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
           clearSession()
         }
       })
-  }, [clearSession, persistSession])
+  }, [clearSession, handleUnauthorized, persistSession])
 
   const login = useCallback(async (input: LoginInput) => {
     const nextSession = await apiClient.post<LoginResponse>('/api/login', input)
