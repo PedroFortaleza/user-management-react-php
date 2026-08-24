@@ -2,7 +2,7 @@
 
 Aplicação full stack local para autenticação e gerenciamento de usuários. O projeto combina uma API REST em PHP puro com uma SPA React, usando arquivos JSON como persistência — conforme o desafio técnico.
 
-> Status: Fases 1, 2 e 3 concluídas. A aplicação possui autenticação persistente e CRUD completo de usuários; os diferenciais serão desenvolvidos nas próximas fases descritas em [ROADMAP.md](ROADMAP.md).
+> Status: Fases 1 a 4 concluídas. A aplicação possui autenticação persistente, CRUD, permissões por perfil, filtro, testes locais e Docker Compose.
 
 ## Objetivo
 
@@ -57,7 +57,7 @@ Permitir que um usuário autenticado consulte, cadastre, edite e exclua usuário
 
 ## Como executar
 
-Os comandos abaixo funcionam até a Fase 3.
+Os comandos abaixo funcionam até a Fase 4.
 
 1. Prepare as variáveis do backend (opcional, mas recomendado para configurar a origem permitida pelo CORS):
 
@@ -126,7 +126,7 @@ Os retornos de erro serão consistentes: `400` para JSON/requisição inválida,
 - **Validação duplicada com propósito:** o frontend dá retorno imediato; o backend é a fonte de verdade para formato do e-mail, unicidade, senha mínima de 8 caracteres, perfil permitido e campos obrigatórios.
 - **Experiência e acessibilidade:** haverá estados visuais de carregamento, erro e vazio; mensagens de sucesso/falha; confirmação de exclusão; labels associados, foco visível e fluxo por teclado.
 
-## Diferenciais planejados
+## Diferenciais incluídos
 
 - Frontend em TypeScript;
 - testes automatizados para fluxos e regras importantes;
@@ -138,7 +138,7 @@ Os retornos de erro serão consistentes: `400` para JSON/requisição inválida,
 
 ## Scripts de qualidade disponíveis
 
-Execute estes comandos antes de commitar alterações no frontend:
+Execute estes comandos antes de commitar:
 
 ```bash
 # frontend
@@ -146,14 +146,19 @@ npm run lint
 npm run build
 ```
 
-Testes automatizados de frontend e backend serão adicionados na Fase 4.
+```bash
+# backend
+php backend/tests/run.php
+
+# ambiente conteinerizado
+docker compose up --build
+```
 
 ## Limitações conhecidas
 
 - A persistência em JSON é apropriada ao desafio e ao uso local, mas não substitui um banco de dados em produção.
 - Tokens e arquivos de dados não são um provedor de identidade nem um cofre de segredos; são uma implementação local didática.
-- A política de permissão detalhada será documentada e testada junto da implementação para evitar divergência entre API e interface.
-- As permissões por perfil serão refinadas na Fase 4. Nesta fase, qualquer usuário autenticado pode gerenciar cadastros.
+- Usuários com perfil `user` podem consultar somente o próprio cadastro; apenas `admin` cria, edita e exclui usuários.
 
 ## Histórico de implementação
 
