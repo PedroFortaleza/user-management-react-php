@@ -58,13 +58,11 @@ O merge de `develop` para `main` não é automático e só deve ser realizado qu
 
 **Objetivo:** elevar confiabilidade e experiência sem ampliar a complexidade do núcleo.
 
-**Status:** concluída.
-
-- [x] Aplicar RBAC: `admin` gerencia; `user` apenas visualiza o permitido, com proteção no servidor e interface.
-- [x] Adicionar busca/filtro na listagem.
-- [x] Revisar acessibilidade: labels, foco visível, teclado, mensagens anunciáveis e modal de confirmação.
-- [x] Adicionar testes de services/repositórios e dos fluxos principais de autenticação e usuários.
-- [x] Configurar lint, build e Docker Compose opcional; documentar os resultados e limitações reais.
+- Aplicar RBAC: `admin` gerencia; `user` apenas visualiza o permitido, com proteção no servidor e interface.
+- Adicionar busca/filtro na listagem.
+- Revisar acessibilidade: labels, foco visível, teclado, mensagens anunciáveis e modal de confirmação.
+- Adicionar testes de services/repositórios e dos fluxos principais de autenticação e usuários.
+- Configurar lint, build e Docker Compose opcional; documentar os resultados e limitações reais.
 
 **Validação:** testes, lint e build passam; `user` não consegue chamar ações administrativas diretamente na API; interface é navegável por teclado.
 
@@ -74,10 +72,12 @@ O merge de `develop` para `main` não é automático e só deve ser realizado qu
 
 **Objetivo:** preparar uma demonstração confiável.
 
-- Executar o projeto do zero seguindo apenas o README.
-- Revisar contrato HTTP, códigos de status, mensagens, ausência de dados sensíveis e dados versionados indevidamente.
-- Conferir responsividade, console do navegador e logs de erro.
-- Atualizar README com decisões finais, comandos, credenciais, cobertura/checagens e limitações conhecidas.
+**Status:** concluída.
+
+- [x] Executar o projeto do zero seguindo apenas o README.
+- [x] Revisar contrato HTTP, códigos de status, mensagens, ausência de dados sensíveis e dados versionados indevidamente.
+- [x] Conferir responsividade, console do navegador e logs de erro.
+- [x] Atualizar README com decisões finais, comandos, credenciais, cobertura/checagens e limitações conhecidas.
 
 **Validação:** demonstrar login, F5, CRUD, validações, permissões e logout sem erro no console.
 

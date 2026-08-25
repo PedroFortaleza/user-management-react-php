@@ -2,7 +2,7 @@
 
 Aplicação full stack local para autenticação e gerenciamento de usuários. O projeto combina uma API REST em PHP puro com uma SPA React, usando arquivos JSON como persistência — conforme o desafio técnico.
 
-> Status: Fases 1 a 4 concluídas. A aplicação possui autenticação persistente, CRUD, permissões por perfil, filtro, testes locais e Docker Compose.
+> Status: Fases 1 a 5 concluídas. A aplicação foi revisada para entrega, com autenticação persistente, CRUD, permissões por perfil, filtro, testes locais e Docker Compose.
 
 ## Objetivo
 
@@ -17,7 +17,7 @@ Permitir que um usuário autenticado consulte, cadastre, edite e exclua usuário
 | Frontend | React 18 + Vite + TypeScript | SPA rápida, tipada e simples de executar. |
 | HTTP | `fetch` encapsulado em um cliente | Evita dependência desnecessária e centraliza o token/erros. |
 | Rotas | React Router | Separa as rotas públicas e protegidas. |
-| Testes | PHPUnit e Vitest/Testing Library | Cobrem regras críticas no backend e interface. |
+| Testes | Script PHP e Vitest | Cobrem regras críticas do backend e cliente HTTP. |
 
 ## Estrutura atual
 
@@ -165,6 +165,11 @@ docker compose up --build
 - A persistência em JSON é apropriada ao desafio e ao uso local, mas não substitui um banco de dados em produção.
 - Tokens e arquivos de dados não são um provedor de identidade nem um cofre de segredos; são uma implementação local didática.
 - Usuários com perfil `user` podem consultar somente o próprio cadastro; apenas `admin` cria, edita e exclui usuários.
+- Para executar o Compose localmente, o Docker Desktop/daemon precisa estar iniciado.
+
+## Verificação de entrega
+
+A revisão final confirmou: respostas JSON e códigos HTTP esperados; ausência de senha/hash nas respostas; CRUD integrado à autenticação; validações de e-mail, senha e perfil; proteção contra autoexclusão; RBAC; sessão persistente e tratamento de `401`; lint, testes e build aprovados. A configuração do Docker Compose foi validada com `docker compose config`.
 
 ## Histórico de implementação
 
