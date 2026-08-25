@@ -142,12 +142,18 @@ Execute estes comandos antes de commitar:
 
 ```bash
 # frontend
+cd frontend
 npm run lint
+npm run test
 npm run build
 ```
 
 ```bash
 # backend
+cd backend
+php tests/run.php
+
+# ou, a partir da raiz do projeto
 php backend/tests/run.php
 
 # ambiente conteinerizado
