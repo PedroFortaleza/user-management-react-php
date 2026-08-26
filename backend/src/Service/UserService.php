@@ -43,6 +43,9 @@ final class UserService
     {
         $this->requireAdmin($actor);
         $user = $this->requireUser($id);
+        if ($id === (int) $actor['id'] && $input->role() !== $user['role']) {
+            throw new ValidationException(['role' => ['Você não pode alterar o perfil da própria conta.']]);
+        }
         $this->ensureEmailAvailable($input->email(), $id);
         $user['name'] = $input->name();
         $user['email'] = $input->email();

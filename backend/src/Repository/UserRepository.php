@@ -77,8 +77,12 @@ final class UserRepository extends AbstractRepository
     public function createInitialAdmin(string $passwordHash): void
     {
         $this->storage->mutate(function (array $users) use ($passwordHash): array {
-            foreach ($users as $user) {
+            foreach ($users as $index => $user) {
                 if (strtolower((string) ($user['email'] ?? '')) === 'admin@empresa.com') {
+                    if (($user['role'] ?? null) !== 'admin') {
+                        $users[$index]['role'] = 'admin';
+                        $users[$index]['updated_at'] = (new \DateTimeImmutable('now'))->format(DATE_ATOM);
+                    }
                     return $users;
                 }
             }
