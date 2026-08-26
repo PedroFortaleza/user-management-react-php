@@ -48,25 +48,28 @@ export function LoginPage() {
 
   return (
     <AppShell
+      variant="auth"
       eyebrow="Acesso ao sistema"
       title="Entre na sua conta"
       description="Use suas credenciais para acessar a gestão de usuários."
     >
-      <form className="form-stack" onSubmit={handleSubmit} noValidate>
-        <div className="field-group">
-          <label htmlFor="email">E-mail</label>
-          <input id="email" name="email" type="email" autoComplete="email" placeholder="voce@empresa.com" value={email} onChange={(event) => setEmail(event.target.value)} required />
-        </div>
+      <div className="login-panel" style={{ padding: 0, borderRadius: 0, background: 'transparent', boxShadow: 'none' }}>
+        <form className="form-stack" onSubmit={handleSubmit} noValidate>
+          <div className="field-group">
+            <label htmlFor="email">E-mail</label>
+            <input id="email" name="email" type="email" autoComplete="email" placeholder="voce@empresa.com" value={email} onChange={(event) => setEmail(event.target.value)} required />
+          </div>
 
-        <div className="field-group">
-          <label htmlFor="password">Senha</label>
-          <input id="password" name="password" type="password" autoComplete="current-password" placeholder="Sua senha" value={password} onChange={(event) => setPassword(event.target.value)} required />
-        </div>
+          <div className="field-group">
+            <label htmlFor="password">Senha</label>
+            <input id="password" name="password" type="password" autoComplete="current-password" placeholder="Sua senha" value={password} onChange={(event) => setPassword(event.target.value)} required />
+          </div>
 
-        <button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? 'Entrando…' : 'Entrar'}
-        </button>
-      </form>
+          <button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? 'Entrando…' : 'Entrar'}
+          </button>
+        </form>
+      </div>
       {message && <p className="status-note status-note--error" role="alert">{message}</p>}
     </AppShell>
   )
